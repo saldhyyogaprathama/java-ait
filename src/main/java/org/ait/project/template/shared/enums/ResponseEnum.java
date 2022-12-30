@@ -10,6 +10,12 @@ public enum ResponseEnum {
   SUCCESS("PMRK-200", "success", HttpStatus.OK),
   JSON_PLACE_HOLDER_POST_NOT_FOUND("PMRK-0001", "jph.post.not.found", HttpStatus.NOT_FOUND),
 
+  USER_NOT_FOUND("PMRK-404", "user.not.found", HttpStatus.NOT_FOUND),
+
+  EMAIL_NOT_FOUND("PMRK-404", "email.not.found", HttpStatus.NOT_FOUND),
+  EMAIL_ALREADY_EXIST("PMRK-409", "email.exist", HttpStatus.NOT_FOUND),
+
+
   INVALID_PARAM("PMRK-0009", "invalid.param", HttpStatus.BAD_REQUEST),
   INTERNAL_SERVER_ERROR("PMRK-9999", "internal.server.error", HttpStatus.INTERNAL_SERVER_ERROR),
 

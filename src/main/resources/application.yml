@@ -13,6 +13,17 @@ spring:
     enabled: false
   jackson:
     time-zone: Asia/Jakarta
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:6543/java-ait
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
 
 #logbook style: https://github.com/zalando/logbook#configuration
 logbook:
