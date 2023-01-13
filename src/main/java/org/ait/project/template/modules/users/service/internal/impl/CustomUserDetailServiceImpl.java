@@ -1,4 +1,4 @@
-package org.ait.project.template.modules.users.service.internal;
+package org.ait.project.template.modules.users.service.internal.impl;
 
 import org.ait.project.template.modules.users.model.entity.Users;
 import org.ait.project.template.modules.users.model.repository.UsersRepository;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailServiceImpl implements UserDetailsService {
 
     @Autowired
     private UsersRepository repository;
@@ -24,9 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         String emailUser = null;
         String passwordUser = null;
 
-//        System.out.println("userrr", );
         if (user.isPresent()) {
-            System.out.println("userrr"+ user.get().getEmail());
             emailUser = user.get().getEmail();
             passwordUser = user.get().getPassword();
         }

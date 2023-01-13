@@ -1,7 +1,6 @@
 package org.ait.project.template.modules.users.service.internal.impl;
 
 import lombok.RequiredArgsConstructor;
-//import org.ait.project.template.modules.auth.dto.request.SignupRequest;
 import org.ait.project.template.modules.users.dto.request.AuthDto;
 import org.ait.project.template.modules.users.dto.request.CreateUserDto;
 import org.ait.project.template.modules.users.dto.request.UpdateUserDto;
@@ -19,14 +18,12 @@ import org.ait.project.template.shared.template.ResponseCollection;
 import org.ait.project.template.shared.template.ResponseDetail;
 import org.ait.project.template.shared.template.ResponseTemplate;
 import org.ait.project.template.shared.utils.JwtUtil;
-import org.ait.project.template.shared.utils.PasswordEncryption;
 import org.ait.project.template.shared.utils.ResponseHelper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +38,10 @@ public class UserServiceImpl implements UserService {
 
     private final JwtUtil jwtUtil;
 
+    /**
+     * Function to get all users
+     * @return ResponseEntity which contains a list of UserResponse Responses
+     */
     public ResponseEntity<ResponseTemplate<ResponseCollection<UserResponse>>> getAllUsers() {
         List<Users> usersList = userDelegate.getAllUsers();
 
@@ -48,11 +49,15 @@ public class UserServiceImpl implements UserService {
                 userTransform.createUserResponseList(usersList));
     }
 
+    /**
+     * Function to create user
+     * @param createUserDto is the body of the request that represents the data to be added
+     * @return ResponseEntity which contains a list of UserResponse Responses
+     */
     public ResponseEntity<ResponseTemplate<ResponseDetail<UserResponse>>> createUser(CreateUserDto createUserDto) {
-        System.out.println("email"+ createUserDto.getEmail());
-//        Users checkUserByEmail = userDelegate.getUserByEmail(createUserDto.getEmail());
 
         Boolean userExist = userDelegate.findByEmail(createUserDto.getEmail());
+
         if (userExist) {
             throw new EmailExistsException();
         }
@@ -60,19 +65,34 @@ public class UserServiceImpl implements UserService {
         String hashPassword = bCryptPasswordEncoder.encode(createUserDto.getPassword());
         createUserDto.setPassword(hashPassword);
 
-        Users result = userDelegate.createUser(createUserDto);
+        Users result = userDelegate.createUser(userTransform.createUserDtoToUser(createUserDto));
         return responseHelper.createResponseDetail(ResponseEnum.SUCCESS, userTransform.createUserResponse(result));
-//        return userDelegate.createUser(createUserDto);
     }
 
+    /**
+     * Function to get detail users
+     * @param id is id user
+     * @return ResponseEntity which contains a list of UserResponse Responses
+     */
     public ResponseEntity<ResponseTemplate<ResponseDetail<UserResponse>>> getUserById(Integer id) {
         return responseHelper.createResponseDetail(ResponseEnum.SUCCESS, userTransform.createUserResponse(userDelegate.getUserById(id)));
     }
 
+    /**
+     * Function to delete user
+     * @param id is id user
+     * @return ResponseEntity which contains a list of DeleteResponse Responses
+     */
     public ResponseEntity<ResponseTemplate<ResponseDetail<DeleteResponse>>> deleteUser(Integer id) {
         return responseHelper.createResponseDetail(ResponseEnum.SUCCESS, userTransform.deleteUserReponse(userDelegate.deleteUser(id)));
     }
 
+    /**
+     * Function to update user
+     * @param updateUserDto is the body of the request that represents the data to be updated
+     * @param id is id user
+     * @return ResponseEntity which contains a list of UserResponse Responses
+     */
     public ResponseEntity<ResponseTemplate<ResponseDetail<UserResponse>>> updateUser(UpdateUserDto updateUserDto, Integer id) {
         String hashPassword = bCryptPasswordEncoder.encode(updateUserDto.getPassword());
         updateUserDto.setPassword(hashPassword);
@@ -81,6 +101,11 @@ public class UserServiceImpl implements UserService {
         return responseHelper.createResponseDetail(ResponseEnum.SUCCESS, userTransform.createUserResponse(result));
     }
 
+    /**
+     * Function to get token login
+     * @param authDto is the body of the request that represents email and password
+     * @return ResponseEntity which contains a list of TokenResponse Responses
+     */
     public ResponseEntity<ResponseTemplate<ResponseDetail<TokenResponse>>> signIn(AuthDto authDto) {
         Users user = userDelegate.getUserByEmail(authDto.getEmail());
 
@@ -89,9 +114,6 @@ public class UserServiceImpl implements UserService {
         }
 
 //        String hashPassword = bCryptPasswordEncoder.encode(authDto.getPassword());
-
-        System.out.println("plainpass" + authDto.getPassword());
-        System.out.println("hashpas" + user.getPassword());
 
         Boolean match = bCryptPasswordEncoder.matches(authDto.getPassword(), user.getPassword());
 

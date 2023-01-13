@@ -19,11 +19,10 @@ public interface UserDelegate {
 
     Optional<Users> getUserByName(String name);
 
-    Users createUser(CreateUserDto createUserDto);
+    Users createUser(Users users);
 
     DeleteResponse deleteUser(Integer id);
 
     Users updateUser(UpdateUserDto updateUserDto, Integer id);
 
-//    ResponseEntity<Users> createUser(Users users);
 }

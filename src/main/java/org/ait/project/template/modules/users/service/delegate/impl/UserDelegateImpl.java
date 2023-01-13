@@ -25,8 +25,6 @@ import java.util.Optional;
 public class UserDelegateImpl implements UserDelegate {
     private final UsersRepository repository;
 
-//    private final UserMapStructMapper mapStructMapper;
-
     private final UserTransform userTransform;
 
     @Override
@@ -57,9 +55,9 @@ public class UserDelegateImpl implements UserDelegate {
     }
 
     @Override
-    public Users createUser(CreateUserDto createUserDto) {
-        Users result = repository.save(userTransform.createUserDtoToUser(createUserDto));
-        System.out.println("result" + result);
+    public Users createUser(Users users) {
+        Users result = repository.save(users);
+//        System.out.println("result" + result);
 //         repository.save(mapStructMapper.createUserDtoToUser(createUserDto));
         return result;
     }
